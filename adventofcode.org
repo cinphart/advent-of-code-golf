@@ -1,41 +1,59 @@
 
 #+TITLE: Advent Of Code 2020, Perl Golfing
 
+* Using this file
+
+
+
 * Day 1
+
+I initially implemented these in python for some reason, then decided on day 2 to start golfing. I might come back to these problems later.
 
 ** Problem 1
 
 ** Problem 2
+
 
 * Day 2
 
-** Problem 2
+** Problem 1
 
-#+BEGIN_SRC bash
-perl -nlpe 's/^([0-9]+)-([0-9]+) ([a-z]): *(.*)/print("$4" =~ \/^[^$3]*(?:${3}[^$3]*){$1,$2}[^$3]*\$\/,"\n");/' full.input | perl | grep 1 | wc -l
+#+BEGIN_SRC bash :cmdline <day2_full.input :results value silent
+perl -ne '/(\d+)-(\d+) ([a-z]):/;$c=grep{$_ eq$3}split("",$'\'');$a++if$c>=$1&&$c<=$2;END{print$a}' 
 #+END_SRC
 
-** Problem 1
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day2_full.input :results value silent
+perl -ne '/(\d+)-(\d+) ([a-z]):/;@c=split"",$'\'';$a++if$c[$1]eq$3 xor $c[$2]eq$3;END{print$a}'
+#+END_SRC
 
 * Day 3
 
 ** Problem 1
 
-#+BEGIN_SRC bash
-perl -anle '$a++if$F[$x]eq"#";($x+=3)%=$#F+1;END{print$a}' -F'' full.input
+#+BEGIN_SRC bash :cmdline <day3_full.input :results value silent
+perl -anle '$a++if$F[$x]eq"#";($x+=3)%=$#F+1;END{print$a}' -F''
 #+END_SRC
 
 ** Problem 2
 
-#+BEGIN_SRC bash
-perl -F'' -alne 'BEGIN{@a=((map{[1,$_]}(1,3,5,7)),[2,1])};@a=map{@b=@{$_};($l%$b[0])<1?[$b[0],$b[1],($b[2]+$b[1])%($#F+1),($F[$b[2]]eq"#"?$b[3]+1:$b[3])]:$_}@a;$l++;END{print(eval(join("*",map{$_->[3]}@a)))}' full.input
+#+BEGIN_SRC bash  :cmdline <day3_full.input :results value silent
+perl -F'' -alne 'BEGIN{@a=((map{[1,$_]}(1,3,5,7)),[2,1])};@a=map{@b=@{$_};($l%$b[0])<1?[$b[0],$b[1],($b[2]+$b[1])%($#F+1),($F[$b[2]]eq"#"?$b[3]+1:$b[3])]:$_}@a;$l++;END{print(eval(join("*",map{$_->[3]}@a)))}'
 #+END_SRC
 
 * Day 4
 
 ** Problem 1
 
-#+BEGIN_SRC bash
-perl -00 -F'[\s:]' -ape '%f=@F;$a++if 1>grep{not$f{$_}}("byr","iyr","eyr","hgt","hcl","ecl","pid");$_="";END{print$a}' full.input
+#+BEGIN_SRC bash :cmdline <day4_full.input :results value silent
+perl -00 -F'[\s:]' -ape '%f=@F;$a++if 1>grep{not$f{$_}}("byr","iyr","eyr","hgt","hcl","ecl","pid");$_="";END{print$a}'
 #+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day4_full.input :results value silent
+perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>">2019&&\$v<2031",hgt=>"=~/^((\\d{3})cm|(\\d\\d)in)\$/&&((\$2>149&&\$2<194)||(\$3>58&&\$3<77))",hcl=>"=~/^#[0-9a-f]{6}\$/",ecl=>"=~/^(amb|blu|brn|gr[ny]|hzl|oth)\$/",pid=>"=~/^\\d{9}\$/");%f=@F;$a++if 1>grep{not eval("sub{\$v=\$_[0];\$v$c{$_}}")->($f{$_})}keys(%c);$_="";END{print$a}'
+#+END_SRC
+
 
