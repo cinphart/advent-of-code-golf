@@ -66,8 +66,8 @@ perl -ne 'tr/FBLR/0101/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
 
 ** Problem 2
 
-#+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
-perl -0777 -F'\n' -ae '@q=sort{$a<=>$b}(map{tr/FBLR/0101/;eval"0b$_"}@F);$c=$q[0]-1;foreach(@q){$c=$_ if$_==$c+1};print$c+1'
+#+BEGIN_SRC bash :cmdline <day5_full.input :results output silent
+perl -ne 'tr/FLBR/001/;push@F,"0b$_";END{@q=map{eval}sort(@F);$c=$q[0];map{$c=$_+1if$c==$_}@q;print$c}'
 #+END_SRC
 
 
