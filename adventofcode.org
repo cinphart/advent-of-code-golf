@@ -3,16 +3,31 @@
 
 * Using this file
 
+Load in emacs org-mode, and enable shell evaluation. To do this, Alt-X
+'customize-variable' 'org-babel-load-languages', then add shell to the
+list of loaded languages.
 
+If you hit C-c C-c in any code block, it will run the script with the
+provided parameters, and the result of the script will be displayed
+in the mini-buffer at the bottom of the screen
+
+If you update the :results header parameter in a BEGIN_SRC block to
+'output verbatim', you can see the verbatim output of the run, this is
+often useful when you are trying to debug something.
 
 * Day 1
 
-I initially implemented these in python for some reason, then decided on day 2 to start golfing. I might come back to these problems later.
-
 ** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day1_full.input :results value silent
+perl -0777 -F'\n' -ane '@q=grep{$_->[0]+$_->[1]==2020}map{$a=$_;map{[$a,$_]}grep{$_>=1010}@F}grep{$_<1010}@F;print$q[0]->[0]*$q[0]->[1];'
+#+END_SRC
 
 ** Problem 2
 
+#+BEGIN_SRC bash :cmdline <day1_full.input :results value silent
+perl -0777 -F'\n' -ane 'sub x{my($l,$h,@t)=@_;$l+1>@_?():$l>1?((map{[$h,@{$_}]}x($l-1,@t)),x($l,@t)):([$h],map{[$_]}@t)};@q=@{(grep{@b=@{$_};$b[0]+$b[1]+$b[2]==2020}x(3,@F))[0]};print$q[0]*$q[1]*$q[2];'
+#+END_SRC
 
 * Day 2
 
@@ -66,8 +81,7 @@ perl -ne 'tr/FBLR/0101/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
 
 ** Problem 2
 
-#+BEGIN_SRC bash :cmdline <day5_full.input :results output silent
+#+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
 perl -ne 'tr/FLBR/001/;push@F,"0b$_";END{@q=map{eval}sort(@F);$c=$q[0];map{$c=$_+1if$c==$_}@q;print$c}'
 #+END_SRC
-
 
