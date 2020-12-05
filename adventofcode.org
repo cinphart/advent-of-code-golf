@@ -56,4 +56,18 @@ perl -00 -F'[\s:]' -ape '%f=@F;$a++if 1>grep{not$f{$_}}("byr","iyr","eyr","hgt",
 perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>">2019&&\$v<2031",hgt=>"=~/^((\\d{3})cm|(\\d\\d)in)\$/&&((\$2>149&&\$2<194)||(\$3>58&&\$3<77))",hcl=>"=~/^#[0-9a-f]{6}\$/",ecl=>"=~/^(amb|blu|brn|gr[ny]|hzl|oth)\$/",pid=>"=~/^\\d{9}\$/");%f=@F;$a++if 1>grep{not eval("sub{\$v=\$_[0];\$v$c{$_}}")->($f{$_})}keys(%c);$_="";END{print$a}'
 #+END_SRC
 
+* Day 5
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
+perl -ne 'tr/FBLR/0101/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
+perl -0777 -F'\n' -ae '@q=sort{$a<=>$b}(map{tr/FBLR/0101/;eval"0b$_"}@F);$c=$q[0]-1;foreach(@q){$c=$_ if$_==$c+1};print$c+1'
+#+END_SRC
+
 
