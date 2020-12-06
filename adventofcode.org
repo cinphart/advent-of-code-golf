@@ -76,7 +76,7 @@ perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
-perl -ne 'tr/FBLR/0101/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
+perl -ne 'tr/FLBR/001/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
 #+END_SRC
 
 ** Problem 2
