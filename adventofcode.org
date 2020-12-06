@@ -91,12 +91,12 @@ perl -e '@q=map{eval}sort(map{tr/FLBR/001/;"0b$_"}<>);$c=$q[0];map{$c=$_+1if$c==
 
 ** Problem 1
 
-#+BEGIN_SRC bash :cmdline <day6_full.input :results output verbatim
-perl -e ''
+#+BEGIN_SRC bash :cmdline <day6_full.input :results value silent
+perl -00 -F'\s*' -ne '%f=map{($_,1)}@F;$a+=keys(%f);END{print$a}'
 #+END_SRC
 
 ** Problem 2
 
 #+BEGIN_SRC bash :cmdline <day6_full.input :results value silent
-perl -e ''
+perl -00 -F'\n' -ne '%f=();(map{map{$f{$_}+=1}split""}@F);$a+=grep{$f{$_}==@F}("a".."z");END{print$a}'
 #+END_SRC
