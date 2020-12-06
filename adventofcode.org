@@ -20,13 +20,13 @@ often useful when you are trying to debug something.
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day1_full.input :results value silent
-perl -0777 -F'\n' -ane '@q=grep{$_->[0]+$_->[1]==2020}map{$a=$_;map{[$a,$_]}grep{$_>=1010}@F}grep{$_<1010}@F;print$q[0]->[0]*$q[0]->[1];'
+perl -e '@F=<>;@q=grep{$_->[0]+$_->[1]==2020}map{$a=$_;map{[$a,$_]}grep{$_>=1010}@F}grep{$_<1010}@F;print$q[0]->[0]*$q[0]->[1];'
 #+END_SRC
 
 ** Problem 2
 
 #+BEGIN_SRC bash :cmdline <day1_full.input :results value silent
-perl -0777 -F'\n' -ane 'sub x{my($l,$h,@t)=@_;$l+1>@_?():$l>1?((map{[$h,@{$_}]}x($l-1,@t)),x($l,@t)):([$h],map{[$_]}@t)};@q=@{(grep{@b=@{$_};$b[0]+$b[1]+$b[2]==2020}x(3,@F))[0]};print$q[0]*$q[1]*$q[2];'
+perl -e 'sub x{my($l,$h,@t)=@_;$l+1>@_?():$l>1?((map{[$h,@{$_}]}x($l-1,@t)),x($l,@t)):([$h],map{[$_]}@t)};@q=@{(grep{@b=@{$_};$b[0]+$b[1]+$b[2]==2020}x(3,<>))[0]};print$q[0]*$q[1]*$q[2];'
 #+END_SRC
 
 * Day 2
@@ -34,13 +34,13 @@ perl -0777 -F'\n' -ane 'sub x{my($l,$h,@t)=@_;$l+1>@_?():$l>1?((map{[$h,@{$_}]}x
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day2_full.input :results value silent
-perl -ne '/(\d+)-(\d+) ([a-z]):/;$c=grep{$_ eq$3}split("",$'\'');$a++if$c>=$1&&$c<=$2;END{print$a}' 
+perl -ne '/(.+)-(.+) (.):/;$c=grep{$_ eq$3}split("",$'\'');$a+=$c>=$1&&$c<=$2;END{print$a}' 
 #+END_SRC
 
 ** Problem 2
 
 #+BEGIN_SRC bash :cmdline <day2_full.input :results value silent
-perl -ne '/(\d+)-(\d+) ([a-z]):/;@c=split"",$'\'';$a++if$c[$1]eq$3 xor $c[$2]eq$3;END{print$a}'
+perl -ne '/(.+)-(.+) (.):/;@c=split"",$'\'';$a++if$c[$1]eq$3 xor $c[$2]eq$3;END{print$a}'
 #+END_SRC
 
 * Day 3
@@ -48,7 +48,7 @@ perl -ne '/(\d+)-(\d+) ([a-z]):/;@c=split"",$'\'';$a++if$c[$1]eq$3 xor $c[$2]eq$
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day3_full.input :results value silent
-perl -anle '$a++if$F[$x]eq"#";($x+=3)%=$#F+1;END{print$a}' -F''
+perl  -F'' -anle '$a++if$F[$x]eq"#";($x+=3)%=$#F+1;END{print$a}'
 #+END_SRC
 
 ** Problem 2
@@ -62,13 +62,13 @@ perl -F'' -alne 'BEGIN{@a=((map{[1,$_]}(1,3,5,7)),[2,1])};@a=map{@b=@{$_};($l%$b
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day4_full.input :results value silent
-perl -00 -F'[\s:]' -ape '%f=@F;$a++if 1>grep{not$f{$_}}("byr","iyr","eyr","hgt","hcl","ecl","pid");$_="";END{print$a}'
+perl -00 -F'[\s:]' -ape '%f=@F;$a+=1>grep{not$f{$_}}("byr","iyr","eyr","hgt","hcl","ecl","pid");$_="";END{print$a}'
 #+END_SRC
 
 ** Problem 2
 
 #+BEGIN_SRC bash :cmdline <day4_full.input :results value silent
-perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>">2019&&\$v<2031",hgt=>"=~/^((\\d{3})cm|(\\d\\d)in)\$/&&((\$2>149&&\$2<194)||(\$3>58&&\$3<77))",hcl=>"=~/^#[0-9a-f]{6}\$/",ecl=>"=~/^(amb|blu|brn|gr[ny]|hzl|oth)\$/",pid=>"=~/^\\d{9}\$/");%f=@F;$a++if 1>grep{not eval("sub{\$v=\$_[0];\$v$c{$_}}")->($f{$_})}keys(%c);$_="";END{print$a}'
+perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>">2019&&\$v<2031",hgt=>"=~/^((\\d{3})cm|(\\d\\d)in)\$/&&((\$2>149&&\$2<194)||(\$3>58&&\$3<77))",hcl=>"=~/^#[0-9a-f]{6}\$/",ecl=>"=~/^(amb|blu|brn|gr[ny]|hzl|oth)\$/",pid=>"=~/^\\d{9}\$/");%f=@F;$a+=1>grep{not eval("sub{\$v=\$_[0];\$v$c{$_}}")->($f{$_})}keys(%c);$_="";END{print$a}'
 #+END_SRC
 
 * Day 5
