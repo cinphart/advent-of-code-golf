@@ -9,7 +9,9 @@ list of loaded languages.
 
 If you hit C-c C-c in any code block, it will run the script with the
 provided parameters, and the result of the script will be displayed
-in the mini-buffer at the bottom of the screen
+in the mini-buffer at the bottom of the screen. It is set up to expect
+the input to be available as dayN_full.input in the current directory
+(my inputs are checked in alongside the org file in this repo).
 
 If you update the :results header parameter in a BEGIN_SRC block to
 'output verbatim', you can see the verbatim output of the run, this is
@@ -76,7 +78,7 @@ perl -00 -F'[\s:]' -ape '%c=(byr=>">1919&&\$v<2003",iyr=>">2009&&\$v<2021",eyr=>
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day5_full.input :results value silent
-perl -ne 'tr/FLBR/001/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
+perl -ne 'tr/FLBR/001/;$_=eval"0b$_";$a=$_ if$_>$a;END{print$a}'
 #+END_SRC
 
 ** Problem 2
@@ -85,3 +87,16 @@ perl -ne 'tr/FLBR/001/;$_=eval"0b$_";$a=$_ if $_>$a;END{print$a}'
 perl -ne 'tr/FLBR/001/;push@F,"0b$_";END{@q=map{eval}sort(@F);$c=$q[0];map{$c=$_+1if$c==$_}@q;print$c}'
 #+END_SRC
 
+* Day 6
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day6_full.input :results output verbatim
+perl -e ''
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day6_full.input :results value silent
+perl -e ''
+#+END_SRC
