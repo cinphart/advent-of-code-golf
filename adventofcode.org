@@ -115,4 +115,17 @@ perl -e '%g=%f=();map{@f=split(/ *bags?(?:[,.](?: \d+)? *| contain (?:\d+|no oth
 perl -e '%f=();map{@f=split(/ *bags?(?:[,.]| contain (?:no other bags.)?) */);$k=shift@f;$f{$k}=[map{[/(\d+) (.+)$/]}@f]}<>;sub t{my$c=1;map{$c+=t($_->[1])*$_->[0]}@{$f{$_[0]}};return $c;};print(t("shiny gold")-1);'
 #+END_SRC
 
+* Day 8
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day8_full.input :results value silent
+perl -e '@i=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;sub a{$c+=$_[0];$p++;t()};sub n{$p++;t()};sub j{$p+=$_[0];t()};sub t{($v,$x)=@{$i[$p]};++$r[$p]>1?$c:&{$v}($x)}print t();'
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day8_full.input :results value silent
+perl -e '@j=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;@l=grep{$j[$_]->[0]=~/[nj]/}0..$#j;sub a{$c+=$_[0];$p++;t()};sub n{$p++;t()};sub j{$p+=$_[0];t()};sub t{($v,$x)=@{$i[$p]};$p>$#i?($c,0):++$r[$p]>1?($c,1):&{$v}($x)};print((grep{$_->[1]==0}map{$c=0;$p=0;@r=();@i=map{[@{$_}]}@j;$i[$_]->[0]=~tr/nj/jn/;[t()]}@l)[0]->[0])'
+#+END_SRC
 
