@@ -236,6 +236,8 @@ perl -le '@a=map{0+$_}<>;
 print((grep{%f=map{$q=$_;map{($q+$_,1)}(grep{$q!=$_}@p)}@p;shift@p;push@p,$_;not $f{$_}}@a)[0])'
 #+END_SRC
 
+** Problem 2
+
 #+BEGIN_SRC bash :cmdline <day9_full.input :results value silent
 perl -le 'use List::Util qw[min max];
 @a=map{0+$_}<>;@r=(map{$p=$_,$v=$a[$p];map{[$p,$_,$v+=$a[$_]]}($_+1)..$#a}0..$#a);
