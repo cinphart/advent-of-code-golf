@@ -123,9 +123,125 @@ perl -e '%f=();map{@f=split(/ *bags?(?:[,.]| contain (?:no other bags.)?) */);$k
 perl -e '@i=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;sub a{$c+=$_[0];$p++;t()};sub n{$p++;t()};sub j{$p+=$_[0];t()};sub t{($v,$x)=@{$i[$p]};++$r[$p]>1?$c:&{$v}($x)}print t();'
 #+END_SRC
 
+*** Statement By Statement Breakdown
+
+**** Parsing the instructions into a useable form
+#+BEGIN_SRC perl
+@i=map{/(.).. ([+-]\d+)/;[$1,$2]}<>
+#+END_SRC
+
+This map processes the entire source file (~<>~ is called in array
+context, so returns an array of all the lines in the file), and pulls
+out the first character of each instruction, and the operand, using
+the regular expression ~/(.).. ([+-]\d+)/~. This implicitly puts the
+two groups in the regexp into ~$1~ and ~$2~, which are then return for each line as an array reference ~[$1,$2]~
+
+The reason for abbreviating the instruction names to a unique single
+character is to allow us to use a single character name later for the
+subroutine that implements each instruction.
+
+After this line has run, ~@i~ contains the abbreviated instructions and operands
+
+**** Subroutine Implementing 'acc'
+
+#+BEGIN_SRC perl
+sub a{$c+=$_[0];$p++;t()}
+#+END_SRC
+
+This subroutine implements the abbreviated 'acc' instruction
+(abbreviated to a). Basically, it adds the operand to the accumulator
+(~$c~), and increments the program counter (~$p~) by one. It then
+calls ~t()~, which is the interpreter, to continue interpreting the
+result. Calling ~t()~ at the end of the functio like this results in
+the return value of ~t()~ being implicitly used as the return value
+for this function.
+
+Note that both ~$c~ and ~$p~ are uninitialized - the first time either of
+them are used, they will be treated as 0, and incremented
+appropriately. Also, The operand is a string, but perl will
+automatically coerce it to a numeric value, as we are trying to add.
+
+**** Subroutine implementing 'nop'
+
+#+BEGIN_SRC perl
+sub n{$p++;t()}
+#+END_SRC
+
+The nop subroutine just increments the program counter, and calls ~t()~ to continue interpreting.
+
+**** Subroutine implement 'jmp'
+
+#+BEGIN_SRC perl
+sub j{$p+=$_[0];t()}
+#+END_SRC
+
+The 'jmp' subroutine updates the program counter by the operand
+(coerced by perl from a string), and continues interpreting.
+
+**** Interpreter
+
+#+BEGIN_SRC perl
+sub t{($v,$x)=@{$i[$p]};++$r[$p]>1?$c:&{$v}($x)}
+#+END_SRC
+
+The interpreter is fairly simple:
+
+ - It first accesses ~$i[$p]~, which is the current instruction. This
+   is an array reference, so we convert it to an array using ~@{...}~,
+   and then assign that into two variables ~$v~ and ~$x~. ~$v~ is the
+   abbreviated instruction, and ~$x~ is the operand.
+
+ - It then ~++$r[$p]~ increments a counter for the particular line we
+   are about to run to see if it has been referenced before. The array
+   is implicitly empty, and when we reference a line for the first
+   time the item at index ~p~ will be empty, and thus implicitly 0,
+   and gets updated to 1
+
+ - This is then compared to see if it is greater than 1 - ~++$r[$p]>1~. 
+
+ - If it is, we have reached the end, as we are running a line we have
+   already run before, and are in an infinite loop. So we just return
+   the value of the accumulator $c (implicitly)
+
+ - If it has not been run again, we call the function related to the
+   operand. This uses the fact that we can get perl to dereference a
+   string to a function name using e.g ~&{"a"}(arg1,arg2)~. In this
+   case, we are using the ~$v~ we extracted (the abbreviated
+   instruction name) as the function name, and the ~$x~ (the operand)
+   as the only parameter passed in. The result of this called function
+   is implicitly returned as the result of the interpreter function.
+
+*** Invocation
+
+#+BEGIN_SRC perl
+print t();
+#+END_SRC
+
+Finally, we invoke the interpreter function ~t()~, and return the
+result.
+
 ** Problem 2
 
 #+BEGIN_SRC bash :cmdline <day8_full.input :results value silent
 perl -e '@j=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;@l=grep{$j[$_]->[0]=~/[nj]/}0..$#j;sub a{$c+=$_[0];$p++;t()};sub n{$p++;t()};sub j{$p+=$_[0];t()};sub t{($v,$x)=@{$i[$p]};$p>$#i?($c,0):++$r[$p]>1?($c,1):&{$v}($x)};print((grep{$_->[1]==0}map{$c=0;$p=0;@r=();@i=map{[@{$_}]}@j;$i[$_]->[0]=~tr/nj/jn/;[t()]}@l)[0]->[0])'
 #+END_SRC
+
+* Day 9
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day9_full.input :results value silent
+perl -le '@a=map{0+$_}<>;
+@p=map{shift@a}1..25;
+print((grep{%f=map{$q=$_;map{($q+$_,1)}(grep{$q!=$_}@p)}@p;shift@p;push@p,$_;not $f{$_}}@a)[0])'
+#+END_SRC
+
+#+BEGIN_SRC bash :cmdline <day9_full.input :results value silent
+perl -le 'use List::Util qw[min max];
+@a=map{0+$_}<>;@r=(map{$p=$_,$v=$a[$p];map{[$p,$_,$v+=$a[$_]]}($_+1)..$#a}0..$#a);
+($s,$e)=@{((grep{$_->[2]==756008079}@r)[0])};
+@v=@a[$s..$e];
+print min(@v)+max(@v)'
+#+END_SRC
+
 
