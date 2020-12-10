@@ -137,7 +137,7 @@ This is the recursive case, if length > 1, which is returning the concatenation 
   the call ~@{$_}~ to x, prepends ~$h~, and wraps the whole new array up
   in a reference.
 
-  ...appending ~$h~ to every ~$l-1~ combination ~x($l-1,@t)~ of the rest of the list to
+  ...prepending ~$h~ to every ~$l-1~ combination ~x($l-1,@t)~ of the rest of the list to
 
 #+BEGIN_SRC perl
 x($l,@t)
