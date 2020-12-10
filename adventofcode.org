@@ -228,6 +228,11 @@ perl -e '@j=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;@l=grep{$j[$_]->[0]=~/[nj]/}0..$#j;
 
 * Day 9
 
+#+NAME: count-characters
+#+BEGIN_SRC bash
+wc -c
+#+END_SRC
+
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day9_full.input :results value silent
@@ -254,9 +259,89 @@ print min(@v)+max(@v)'
 perl -e 'map{$a[$_-$x]++;$x=$_}(sort{$a<=>$b}(<>));print($a[1]*($a[3]+1))' 
 #+END_SRC
 
+*** Statement By Statement
+
+This is essentially just counting the differences between the joltages of consecutive adapters
+
+#+BEGIN_SRC perl
+sort{$a<=>$b}(<>)
+#+END_SRC
+
+This sorts the input in numeric order. Unfortunately, by default sorts
+in perl are lexicographically ordered by default, so we have to
+explicily specify numeric order. The ~<=>~ 'spaceship' operator is
+used for this.
+
+#+BEGIN_SRC perl
+  map{$a[$_-$x]++;$x=$_}(sort{$a<=>$b}(<>))
+#+END_SRC
+
+  We then map across the results of the sort, and increment one of an
+  array of counters based on the difference between this element and
+  the previous ~$x~. We then set ~$x~ to the current element, so it's
+  ready for the next entry. Part of the trick here is that ~$x~ is
+  undefined at the beginning, which is implicitly 0> However, we are
+  including the difference from 0 to the first adapter, so this works
+  for us.
+
+#+BEGIN_SRC perl
+  print($a[1]*($a[3]+1))
+#+END_SRC
+
+When the map is complete, we have an array of the counts of
+differences, and we can just multiply the count of 1 jolt differences
+to the count of 3 jolt differences.
 
 ** Problem 2
 
+#+NAME: day10-problem2
 #+BEGIN_SRC bash :cmdline <day10_full.input :results value silent
 perl -e '@a=sort{$b<=>$a}(map{$_+0}<>);$f{shift@a}=1;map{$f{$_}=$f{$_+1}+$f{$_+2}+$f{$_+3};}(@a,0);print($f{0})'
 #+END_SRC
+
+*** Statement By Statement
+
+#+BEGIN_SRC perl
+map{$_+0}<>
+#+END_SRC
+
+Reads the file, and converts it into an array of numbers. This is
+important later - the hash used to track the number of paths to a
+particular voltage would otherwise use the string, which includes a
+trailing "\n" that we don't get with the implicit conversion back from
+a number.
+
+#+BEGIN_SRC perl
+@a=sort{$b<=>$a}(map{$_+0}<>)
+#+END_SRC
+
+This is sorting the list of results in reverse. We do this so we get
+the largest adapter joltage first, so we can count the number of ways
+to get from that to the maximum joltage - which is one, as it's always
+3 higher that the largest adapter joltage.
+
+#+BEGIN_SRC perl
+$f{shift@a}=1
+#+END_SRC
+
+This sets the count for the number of ways from the maximum adapter
+joltage to the final joltage to 1, and also removes the first value
+from the array.
+
+#+BEGIN_SRC perl
+map{$f{$_}=$f{$_+1}+$f{$_+2}+$f{$_+3};}(@a,0)
+#+END_SRC
+
+This takes the array of adapters, not including the most powerful, and
+adds a 0 (for the port joltage) at the end, so we have the entire
+chain.  It then runs through the list (which is ordered in reverse),
+and sets the count of ways to get to from that joltage to the final
+joltage as the sum of the ways to get to each of the next three
+joltages. When we're done with this, $f{0} (the last one to be
+calculated) will be the number we are looking for.
+
+#+BEGIN_SRC perl
+print($f{0})
+#+END_SRC
+
+Prints the result out.
