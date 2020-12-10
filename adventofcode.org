@@ -228,11 +228,6 @@ perl -e '@j=map{/(.).. ([+-]\d+)/;[$1,$2]}<>;@l=grep{$j[$_]->[0]=~/[nj]/}0..$#j;
 
 * Day 9
 
-#+NAME: count-characters
-#+BEGIN_SRC bash
-wc -c
-#+END_SRC
-
 ** Problem 1
 
 #+BEGIN_SRC bash :cmdline <day9_full.input :results value silent
@@ -280,7 +275,7 @@ used for this.
   array of counters based on the difference between this element and
   the previous ~$x~. We then set ~$x~ to the current element, so it's
   ready for the next entry. Part of the trick here is that ~$x~ is
-  undefined at the beginning, which is implicitly 0> However, we are
+  undefined at the beginning, which is implicitly 0. However, we are
   including the difference from 0 to the first adapter, so this works
   for us.
 
@@ -332,12 +327,13 @@ from the array.
 map{$f{$_}=$f{$_+1}+$f{$_+2}+$f{$_+3};}(@a,0)
 #+END_SRC
 
-This takes the array of adapters, not including the most powerful, and
+This takes the array of adapters, not including the most powerful
+(which was removed in the previous step), and
 adds a 0 (for the port joltage) at the end, so we have the entire
 chain.  It then runs through the list (which is ordered in reverse),
 and sets the count of ways to get to from that joltage to the final
 joltage as the sum of the ways to get to each of the next three
-joltages. When we're done with this, $f{0} (the last one to be
+joltages. When we're done with this, ~$f{0}~ (the last one to be
 calculated) will be the number we are looking for.
 
 #+BEGIN_SRC perl
