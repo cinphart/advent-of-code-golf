@@ -130,8 +130,8 @@ one larger than the size of the original array, so we're comparing
 This is the recursive case, if length > 1, which is returning the concatenation of
 
 #+BEGIN_SRC perl
-  (map{[$h,@{$_}]}x($l-1,@t))
-  ,#+END_SRC perl
+(map{[$h,@{$_}]}x($l-1,@t))
+#+END_SRC perl
 
   The ~[$h,@{$_}]~ in the map unwraps the array reference returned from
   the call ~@{$_}~ to x, prepends ~$h~, and wraps the whole new array up
@@ -139,8 +139,8 @@ This is the recursive case, if length > 1, which is returning the concatenation 
 
   ...appending ~$h~ to every ~$l-1~ combination ~x($l-1,@t)~ of the rest of the list to
 
-  ,#+BEGIN_SRC perl
-  x($l,@t)
+#+BEGIN_SRC perl
+x($l,@t)
 #+END_SRC
 
 ...which is all combinations of length ~$l~ from the rest of the list ~@t~.
@@ -387,7 +387,7 @@ sort{$a<=>$b}(<>)
 #+END_SRC
 
 This sorts the input in numeric order. Unfortunately, by default sorts
-in perl are lexicographically ordered by default, so we have to
+in perl are lexicographically ordered, so we have to
 explicily specify numeric order. The ~<=>~ 'spaceship' operator is
 used for this.
 
@@ -409,7 +409,10 @@ used for this.
 
 When the map is complete, we have an array of the counts of
 differences, and we can just multiply the count of 1 jolt differences
-to the count of 3 jolt differences.
+to the count of 3 jolt differences. One tricky thing - the question
+actually asks includes the final jump to the laptop, which is always 3
+larger than the highest adapter joltage. So we add one to the count of
+3 jolt differences to correct for this.
 
 ** Problem 2
 
