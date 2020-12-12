@@ -498,3 +498,34 @@ print($f{0})
 #+END_SRC
 
 Prints the result out.
+
+* Day 11
+
+** Problem 1
+
+#+BEGIN_SRC bash  :cmdline <day11_full.input :results value silent
+perl -e '@l=<>;$s="L";
+$l=[split"",($s x(length(@l[0])+1))];
+@f=($l,(map{chomp;[split"","$s$_$s"]}@l),$l);
+@r=1..@l;@c=1..(-2+@{$l});
+@d=grep{$_->[0]||$_->[1]}map{$x=$_;map{[$x,$_]}-1..1}-1..1;
+sub r{my($x,$y)=@_;@ff=grep{$f[$y+$_->[1]]->[$x+$_->[0]]eq"#"}@d;$ch=$f[$y]->[$x];0==@ff&&"L"eq$ch?"#":3<@ff&&"#"eq$ch?"L":$ch;};
+do {$c=1;@f=($l,(map{$y=$_;[$s,(map{$i=r($_,$y);$c&&=($f[$y]->[$_]eq$i);$i}@c),$s]}@r),$l);
+}until($c);
+print(0+(grep{"#"eq$_}(map{@{$_}}@f)));'
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash  :cmdline <day11_full.input :results value silent
+perl -e '@l=<>;$s="L";$l=[split"",($s x(length(@l[0])+1))];
+@f=($l,(map{chomp;[split"","$s$_$s"]}@l),$l);
+@r=1..@l;@c=1..(-2+@{$l});
+@d=grep{$_->[0]||$_->[1]}map{$x=$_;map{[$x,$_]}-1..1}-1..1;
+sub d{my($x,$y,$h,$v)=@_;do{$b=($f[$y+=$v]->[$x+=$h]);}until("."ne$b);"#"eq$b}
+sub r{my($x,$y)=@_;$ch=$f[$y]->[$x];$f=grep{d($x,$y,@{$_})}@d;0==$f&&"L"eq$ch?"#":4<$f&&"#"eq$ch?"L":$ch;};
+do {$c=1;@f=($l,(map{$y=$_;[$s,(map{$i=r($_,$y);$c&&=($f[$y]->[$_]eq$i);$i}@c),$s]}@r),$l);
+}until($c);
+print(0+(grep{"#"eq$_}(map{@{$_}}@f)))'
+#+END_SRC
+
