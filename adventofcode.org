@@ -527,16 +527,6 @@ map{print "$_->[0]$_->[1]: $x,$y -> $a($a{$a}) =>";&{$_->[0]}($_->[1]);$a%=360;p
 print"$x,$y=${\(abs($x)+abs($y))}"'
 #+END_SRC
 
-
-
-#+RESULTS:
-#+begin_example
-R90: 0,0 -> 0(E) =>0,0 ->90(S)
-F58: 0,0 -> 90(S) =>0,58 ->90(S)
-S2: 0,58 -> 90(S) =>0,60 ->90(S)
-print(0+(grep{"#"eq$_}(map{@{$_}}@f)));'
-#+END_SRC
-
 ** Problem 2
 
 #+BEGIN_SRC bash  :cmdline <day11_full.input :results value silent
