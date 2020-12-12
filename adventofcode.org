@@ -512,6 +512,28 @@ $l=[split"",($s x(length(@l[0])+1))];
 sub r{my($x,$y)=@_;@ff=grep{$f[$y+$_->[1]]->[$x+$_->[0]]eq"#"}@d;$ch=$f[$y]->[$x];0==@ff&&"L"eq$ch?"#":3<@ff&&"#"eq$ch?"L":$ch;};
 do {$c=1;@f=($l,(map{$y=$_;[$s,(map{$i=r($_,$y);$c&&=($f[$y]->[$_]eq$i);$i}@c),$s]}@r),$l);
 }until($c);
+perl -e '@l=map{/(.)(.+)/;[$1,$2]}<>;
+#@l=map{/(.)(.+)/;[$1,$2]}("L180","F10");
+$x=$y=$a=0;
+%a=(0=>"E",90=>"S",180=>"W",270=>"N");
+sub L{$a-=$_[0]}
+sub R{$a+=$_[0]}
+sub F{&{$a{$a}}(@_)}
+sub E{$x+=$_[0]}
+sub S{$y+=$_[0]}
+sub W{$x-=$_[0]}
+sub N{$y-=$_[0]}
+map{print "$_->[0]$_->[1]: $x,$y -> $a($a{$a}) =>";&{$_->[0]}($_->[1]);$a%=360;print "$x,$y ->$a($a{$a})\n"}@l;
+print"$x,$y=${\(abs($x)+abs($y))}"'
+#+END_SRC
+
+
+
+#+RESULTS:
+#+begin_example
+R90: 0,0 -> 0(E) =>0,0 ->90(S)
+F58: 0,0 -> 90(S) =>0,58 ->90(S)
+S2: 0,58 -> 90(S) =>0,60 ->90(S)
 print(0+(grep{"#"eq$_}(map{@{$_}}@f)));'
 #+END_SRC
 
@@ -527,5 +549,32 @@ sub r{my($x,$y)=@_;$ch=$f[$y]->[$x];$f=grep{d($x,$y,@{$_})}@d;0==$f&&"L"eq$ch?"#
 do {$c=1;@f=($l,(map{$y=$_;[$s,(map{$i=r($_,$y);$c&&=($f[$y]->[$_]eq$i);$i}@c),$s]}@r),$l);
 }until($c);
 print(0+(grep{"#"eq$_}(map{@{$_}}@f)))'
+#+END_SRC
+
+
+* Day 12
+
+** Problem 1
+
+#+BEGIN_SRC bash  :cmdline <day12_full.input :results value silent
+perl -e '@l=map{/(.)(.+)/;[$1,$2]}<>;
+#@l=map{/(.)(.+)/;[$1,$2]}("L180","F10");
+$x=$y=$a=0;%a=(0=>"E",90=>"S",180=>"W",270=>"N");
+sub L{$a-=$_[0]}sub R{$a+=$_[0]}sub F{&{$a{$a}}(@_)}
+sub E{$x+=$_[0]}sub S{$y+=$_[0]}sub W{$x-=$_[0]}sub N{$y-=$_[0]}
+map{&{$_->[0]}($_->[1]);$a%=360;}@l;
+print abs($x)+abs($y)'
+#+END_SRC
+
+
+** Problem 2
+
+#+BEGIN_SRC bash  :cmdline <day12_full.input :results value silent
+perl -e '@l=map{/(.)(.+)/;[$1,$2]}<>;$x=$y=0;$a=10;$b=-1;
+sub r{map{($a,$b)=(-$b,$a)}1..$_[0]}
+sub L{r(4-$_[0]/90)}sub R{r($_[0]/90)}sub F{$x+=($a*$_[0]);$y+=($b*$_[0])}
+sub E{$a+=$_[0]}sub S{$b+=$_[0]}sub W{$a-=$_[0]}sub N{$b-=$_[0]}
+map{&{$_->[0]}($_->[1])}@l;
+print abs($x)+abs($y)'
 #+END_SRC
 
