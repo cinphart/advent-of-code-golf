@@ -568,3 +568,24 @@ map{&{$_->[0]}($_->[1])}@l;
 print abs($x)+abs($y)'
 #+END_SRC
 
+
+* Day 13
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day13_full.input :results value silent
+perl -e '$t=<>;
+@b=grep{$_ ne"x"}split(",",<>);
+@c=map{[$_,$_-($t%$_)]}@b;
+($i,$b)=@{(sort{$a->[1]<=>$b->[1]}@c)[0]};
+print $i*$b;'
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day13_full.input :results values silent
+perl -e '<>;@b=grep{$_->[1]!=0}(map{[$a++,$_]}split(",",<>));
+$m=1;$f=0;map {($d,$i)=@{$_};$a=$i-($d%$i);$f+=$m*(grep{($f+$m*$_)%$i==$a}0..$i-1)[0];$m*=$i;}@b[0..$#b];
+print "$f";'
+#+END_SRC
+
