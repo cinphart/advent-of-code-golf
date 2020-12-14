@@ -589,3 +589,109 @@ $m=1;$f=0;map {($d,$i)=@{$_};$a=$i-($d%$i);$f+=$m*(grep{($f+$m*$_)%$i==$a}0..$i-
 print "$f";'
 #+END_SRC
 
+
+*** Explanation
+
+My approach is based on the idea that if you have something that is
+good for the first 'n' parameters, you can iterate quickly to find a
+new value that still matches the first n, but also matches the
+n+1. The way to do this is to increment by the product of the first
+'n' ids. That way, the new number is always the same remainder for
+each of the previous ids. Also, for each parameter that's an id, you
+only have to iterate 'id' times - because this is modulo arithmetic on
+a prime, you're guaranteed that the first match is the only possible
+match. So the algorithm I use is something like:I think there's a way
+to derive the actual number of times you need to iterate using the
+modular inverse, but honestly my math isn't strong enough to make that
+work, so I just iterate 'id' times until I find it.
+
+
+First thing I do is to iterate through the list, and extract out the index and the id for anything that isn't 'x', e.g., given
+
+#+BEGIN_EXAMPLE
+17,x,13,19
+#+END_EXAMPLE
+
+I will convert this to a set of pairs, the first is the index, the second is the 'id', and I'll end up with:
+
+#+BEGIN_SRC perl
+(0,17)
+(2,13)
+(3,19)
+#+END_SRC
+
+I start out with the base case, which is with 0 as the timestamp, and
+1 as the multiplier needed to maintain current modulos;
+
+index 1 is missing because it's an x, and we don't care about x's at all.
+
+The first case is pretty simple, as well, because we just want to make
+sure that there is 0 seconds until 17 arrives, and the position we are
+currently at already satisfies that. So that case is found on the
+first iteration, for 0. So we add 0 * the multiplier, or 0 to the
+timestamp. And we multiply the multiplier by 17, so that any change is
+guaranteed to not change the modulus of the first id.
+
+Next is 2,13, which means we need to find a timestamp that holds all
+of the previous conditions, but also where x mod 13 = (13-2)) (so that
+the bus leaves at 2 seconds after the timestamp). My simplistic
+approach to this is to try timestamp+N*multiplier where N is from 0 to id-1:
+
+|  N | t |  m | t+m*N | % 13 |
+|----+---+----+-------+------|
+|  0 | 0 | 17 |     0 |    0 |
+|  1 | 0 | 17 |    17 |    4 |
+|  2 | 0 | 17 |    34 |    8 |
+|  3 | 0 | 17 |    51 |   12 |
+|  4 | 0 | 17 |    68 |    3 |
+|  5 | 0 | 17 |    85 |    7 |
+|  6 | 0 | 17 |   102 |   11 |
+|  7 | 0 | 17 |   119 |    2 |
+|  8 | 0 | 17 |   136 |    6 |
+|  9 | 0 | 17 |   153 |   10 |
+| 10 | 0 | 17 |   170 |    1 |
+| 11 | 0 | 17 |   187 |    5 |
+| 12 | 0 | 17 |   204 |    9 |
+#+TBLFM: $4=$2+$1*$3::$5=$4%13
+
+
+So, here we can see that with a value of N set to 6, the result of
+t+m*N mod 13 = 11, so 102 is a timestamp that matches both conditions
+~t mod 17 == 0 AND t mod 13 == 1~. So we set the new timestamp (that
+satisfies the first two conditions) to 102, and we update our
+multiplier to 17*13=221
+
+Our next condition is 3,19, which means we want our timestamp t to be
+3 second before the 19 arrives, or ~t mod 19 == (19-3)~, so ~t mod 19
+== 16~.
+
+Again, we can find a multiplier between 0 and 18 that will handle this case:
+
+
+|  N |   t |   m | t+m*N | % 19 |
+|----+-----+-----+-------+------|
+|  0 | 102 | 221 |   102 |    7 |
+|  1 | 102 | 221 |   323 |    0 |
+|  2 | 102 | 221 |   544 |   12 |
+|  3 | 102 | 221 |   765 |    5 |
+|  4 | 102 | 221 |   986 |   17 |
+|  5 | 102 | 221 |  1207 |   10 |
+|  6 | 102 | 221 |  1428 |    3 |
+|  7 | 102 | 221 |  1649 |   15 |
+|  8 | 102 | 221 |  1870 |    8 |
+|  9 | 102 | 221 |  2091 |    1 |
+| 10 | 102 | 221 |  2312 |   13 |
+| 11 | 102 | 221 |  2533 |    6 |
+| 12 | 102 | 221 |  2754 |   18 |
+| 13 | 102 | 221 |  2975 |   11 |
+| 14 | 102 | 221 |  3196 |    4 |
+| 15 | 102 | 221 |  3417 |   16 |
+| 16 | 102 | 221 |  3638 |    9 |
+| 17 | 102 | 221 |  3859 |    2 |
+| 18 | 102 | 221 |  4080 |   14 |
+#+TBLFM: $2=102::$3=221::$4=$2+$1*$3::$5=$4%19
+
+So in this case, it's the 15th case that has the correct modulus, and
+the timestamp for that is 3417.
+
+
