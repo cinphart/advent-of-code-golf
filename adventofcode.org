@@ -620,10 +620,10 @@ I will convert this to a set of pairs, the first is the index, the second is the
 (3,19)
 #+END_SRC
 
+index 1 is missing because it's an x, and we don't care about x's at all.
+
 I start out with the base case, which is with 0 as the timestamp, and
 1 as the multiplier needed to maintain current modulos;
-
-index 1 is missing because it's an x, and we don't care about x's at all.
 
 The first case is pretty simple, as well, because we just want to make
 sure that there is 0 seconds until 17 arrives, and the position we are
@@ -659,7 +659,9 @@ So, here we can see that with a value of N set to 6, the result of
 t+m*N mod 13 = 11, so 102 is a timestamp that matches both conditions
 ~t mod 17 == 0 AND t mod 13 == 1~. So we set the new timestamp (that
 satisfies the first two conditions) to 102, and we update our
-multiplier to 17*13=221
+multiplier to 17*13=221. Basically, no matter how many times we add
+221 to our timestamp, it is guaranteed to be the same value modulo 17
+AND modulo 13.
 
 Our next condition is 3,19, which means we want our timestamp t to be
 3 second before the 19 arrives, or ~t mod 19 == (19-3)~, so ~t mod 19
