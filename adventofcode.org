@@ -724,3 +724,27 @@ map{@p=@{$_};@r=@a;map{$r[$d[$_]]=$p[$_]}0..$#d;$m{join("",@r)}=$v;}@c[0..2**@d-
 map{($i,@p)=@{$_};&{$i}(@p)}@l;
 map{$a+=$_}values(%m);print$a'
 #+END_SRC
+
+
+* Day 15
+
+* Problem 1
+
+#+BEGIN_SRC  bash :results value silent
+perl -e '@l=(16,12,1,0,15,7,11);
+$p=$l[-1];
+map{$l{$_}=$t++}@l[0..$#l-1];
+map{$l=$p;$p=exists $l{$p}?$t-$l{$p}:0;$l{$l}=$t++}$t..2019;
+print"$l"'
+#+END_SRC
+
+* Problem 2
+
+#+BEGIN_SRC bash :results value silent
+perl -e '@l=(16,12,1,0,15,7,11);
+$p=$l[-1];
+map{$l{$_}=$t++}@l[0..$#l-1];
+map{$l=$p;$p=exists $l{$p}?$t-$l{$p}:0;$l{$l}=$t++}$t..30000000-1;
+print"$l"'
+#+END_SRC
+
