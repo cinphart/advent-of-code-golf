@@ -697,3 +697,30 @@ So in this case, it's the 15th case that has the correct modulus, and
 the timestamp for that is 3417.
 
 
+
+* Day 14
+* Problem 1
+
+#+BEGIN_SRC bash :cmdline <day14_full.input :results value silent
+perl -e '@l=map{[/^m(ask|em)\[?(\d+)?\]? = ([0-9X]+)/]}<>;
+@i=0..35;
+sub ask{@m=split"",$_[1]}
+sub em{@v=split"",sprintf("%036b",$_[1]);
+$w=join("",map{$m[$_]eq"X"?$v[$_]:$m[$_]}@i);
+$m{$_[0]}=eval("0b$w");}
+map{($i,@p)=@{$_};&{$i}(@p)}@l;
+map{$a+=$_}values(%m);
+print$a'
+#+END_SRC
+
+* Problem 2
+
+#+BEGIN_SRC bash :cmdline <day14_full.input :results value silent
+perl -e '@l=map{[/^m(ask|em)\[?(\d+)?\]? = ([0-9X]+)/]}<>;@i=0..35;@c=map{[reverse(split"",sprintf("%09b",$_))]}0..511;
+sub ask{@m=split"",$_[1]}
+sub em{($l,$v)=@_;@v=split"",sprintf("%036b",$l);
+@a=map{$m[$_]eq"1"?"1":$m[$_]eq"0"?$v[$_]:"X"}@i;@d=grep{$a[$_]eq"X"}@i;
+map{@p=@{$_};@r=@a;map{$r[$d[$_]]=$p[$_]}0..$#d;$m{join("",@r)}=$v;}@c[0..2**@d-1];}
+map{($i,@p)=@{$_};&{$i}(@p)}@l;
+map{$a+=$_}values(%m);print$a'
+#+END_SRC
