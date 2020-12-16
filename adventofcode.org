@@ -728,7 +728,7 @@ map{$a+=$_}values(%m);print$a'
 
 * Day 15
 
-* Problem 1
+** Problem 1
 
 #+BEGIN_SRC  bash :results value silent
 perl -e '@l=(16,12,1,0,15,7,11);
@@ -738,7 +738,7 @@ map{$l=$p;$p=exists $l{$p}?$t-$l{$p}:0;$l{$l}=$t++}$t..2019;
 print"$l"'
 #+END_SRC
 
-* Problem 2
+** Problem 2
 
 #+BEGIN_SRC bash :results value silent
 perl -e '@l=(16,12,1,0,15,7,11);
@@ -746,5 +746,32 @@ $p=$l[-1];
 map{$l{$_}=$t++}@l[0..$#l-1];
 map{$l=$p;$p=exists $l{$p}?$t-$l{$p}:0;$l{$l}=$t++}$t..30000000-1;
 print"$l"'
+#+END_SRC
+
+* Day 16
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day16_full.input :results value silent
+perl -e 'while(<>){
+chomp;
+($k,@p)=split/(?::| or) /;
+last if 1>@p;
+map{@q=split"-";map{$r{$_}=1}$q[0]..$q[1]}@p;
+}
+$v=eval(join("+",grep{not $r{$_}}(map{chomp;split/[^\d]+/}<>)));
+print$v'
+#+END_SRC
+
+** Problem 2
+#+BEGIN_SRC bash :cmdline <day16_full.input :results value silent
+perl -e 'while(<>){($k,@p)=split/(?::| or) /;last if 1>@p;$f{$k}={map{@q=split"-";map{$v{$_}=1;($_,1)}$q[0]..$q[1]}@p}}
+@l=map{chomp;[split/[^\d]+/]}<>;
+@l=grep{@f=@{$_};0<@f&&0==grep{not $v{$_}}@f}@l;
+@t=@{$l[0]};
+%m=map {$i=$_;($_,+{map{($_,1)}(grep{$n=$_;not grep{not $f{$n}->{$l[$_]->[$i]}} 0..$#l}keys(%f))})} 0..$#t;
+while(%m){@s=grep{1==%{$m{$_}}}keys(%m);map{$k=(keys(%{$m{$_}}))[0];delete $m{$_};$r{$k}=$_;map{delete $m{$_}->{$k}}keys(%m)}@s}
+print eval(join("*",map{/departure/?$t[$r{$_}]:1}keys(%r)));
+'
 #+END_SRC
 
