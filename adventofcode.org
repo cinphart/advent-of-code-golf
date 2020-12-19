@@ -807,5 +807,59 @@ print 0+%a'
 #+END_SRC
 
 
+* Day 18
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day18_full.input :results value silent
+perl -e 'sub e{my$a=c();while(@s&&$s[0]ne")"){$q=shift@s;if("+"eq$q){$a+=c()}else{$a*=c()}};shift@s;$a}
+sub c{$c=shift@s;"("eq$c?e():0+$c};
+map{@s=grep{length($_)}split(/\s*([(+)*])\s*/);$r+=e()}<>;
+print $r'
+#+END_SRC
+
+** Problem 2
+#+BEGIN_SRC bash :cmdline <day18_full.input :results value silent
+perl -e 'sub e{my$a=c();while(@s&&$s[0]ne")"){$q=shift@s;if("+"eq$q){$a+=c()}else{$a*=e()}};$a}
+sub c{$c=shift@s;if("("eq$c){$c=e();shift@s;return$c};0+$c};
+map{@s=grep{length($_)}split(/\s*([(+)*])\s*/);$r+=e()}<>;
+print $r'
+#+END_SRC
+
+#+RESULTS:
+: 360029542265462
+
+#+BEGIN_EXAMPLE
+((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2
+((6*9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2
+(54 * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2
+(54 * (15 * 8 + 6) + 6) + 2 + 4 * 2
+(54 * (15 * 14) + 6) + 2 + 4 * 2
+(54 * (15 * 14) + 6) + 2 + 4 * 2
+(54 * 210 + 6) + 2 + 4 * 2
+(54 * 216) + 2 + 4 * 2
+(54 * 216) + 2 + 4 * 2
+11664 + 2 + 4 * 2
+11666 + 4 * 2
+11670 * 2
+23340
+#+END_EXAMPLE
+
+* Day 19
+
+** Problem 1
+
+#+BEGIN_SRC bash :cmdline <day19_full.input :results output verbatim
+perl -e '
+
+'
+#+END_SRC
+
+** Problem 2
+
+#+BEGIN_SRC bash :cmdline <day18_full.input :results output verbatim
+perl -e ''
+#+END_SRC
+
 
 
