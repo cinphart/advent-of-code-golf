@@ -849,17 +849,56 @@ print $r'
 
 ** Problem 1
 
-#+BEGIN_SRC bash :cmdline <day19_full.input :results output verbatim
-perl -e '
-
-'
+#+BEGIN_SRC bash :cmdline <day19_full.input :results value silent
+perl -e 'sub u{my%q=map{($_,1)}@_;keys(%q)}
+sub x{my($f,$a)=@{$r{$_[0]}}; &{$f}($a,@_[1..$#_])}
+sub f{my$p=shift@_;map{$_+1}grep{$s[$_]eq$p}@_}
+sub c{my@p=@{shift@_};my@t=@_;map{@t=x($_,@t)}@p;u(@t)}
+sub o{my@p=@{shift@_};u(map{c($_,@_)}@p)}
+while(<>){
+  last unless /^(\d+): *(.*)$/;
+  ($x,$_)=($1,$2);
+  if (/"(.)"/) {
+    $r{$x}=[\&f,$1]
+  } else {
+    $r{$x}=[\&o,[map{[grep{length}(split/\s+/)]}split/\|/]];
+  }
+}
+while(<>){
+  chomp;
+  last unless length;
+  @s=split"";
+  @x=x(0,0);
+  $d++if grep{$_-1==$#s}@x;
+}
+print$d'
 #+END_SRC
 
 ** Problem 2
 
-#+BEGIN_SRC bash :cmdline <day18_full.input :results output verbatim
-perl -e ''
+#+BEGIN_SRC bash :cmdline <day19_full_2.input :results value silent
+perl -e 'sub u{my%q=map{($_,1)}@_;keys(%q)}
+sub x{my($f,$a)=@{$r{$_[0]}};&{$f}($a,@_[1..$#_])}
+sub f{my$p=shift@_;map{$_+1}grep{$s[$_]eq$p}@_}
+sub c{my@p=@{shift@_};my@t=@_;map{@t=x($_,@t)if@t;}@p;u(@t)}
+sub o{my@p=@{shift@_};u(map{c($_,@_)}@p)}
+while(<>){
+  last unless /^(\d+): *(.*)$/;
+  ($x,$_)=($1,$2);
+  if (/"(.)"/) {
+    $r{$x}=[\&f,$1]
+  } else {
+    $r{$x}=[\&o,[map{[grep{length}(split/\s+/)]}split/\|/]];
+  }
+}
+while(<>){
+  chomp;
+  last unless length;
+  @s=split"";
+  @x=x(0,0);
+  $d++if grep{$_-1==$#s}@x;
+}
+print$d'
 #+END_SRC
-
 
 
