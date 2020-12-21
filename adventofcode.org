@@ -902,3 +902,32 @@ print$d'
 #+END_SRC
 
 
+* Day 20
+
+* Problem 1
+
+#+BEGIN_SRC bash :cmdline <day20_full.input :results value silent
+perl -00 -e 'sub k{$b=join("",reverse(split"",$_[0]));eval("0b$_[0]>0b$b")?$_[0]:$b}
+while(<>){
+tr/#./10/;
+($i)=/^Tile (\d+):\n/;
+@l=split"\n",$'"'"';
+$p{$i}=[k($l[0]),k($l[-1]),k(join("",map{substr($_,0,1)}@l)),k(join("",map{substr($_,-1,1)}@l))];
+}
+map{$k=$_;@f=@{$p{$k}};map{push@{$i{$_}},$k}@f}keys(%p);
+map{$c{$i{$_}->[0]}++}(grep{1==@{$i{$_}}}keys(%i));
+print eval(join("*",grep{$c{$_}==2}keys(%c)))'
+#+END_SRC
+
+How it works - I realized the corners would each have two edges that
+didn't match any other edges. For matching, I realized that under
+rotation/flip each edge could be either in the pattern seen, or the
+same pattern reversed. By converting the pattern to binary, I could
+compare the two values, and always use the highest numeric value, that
+way I could be sure that two matching edges would have the same value
+independent of rotation and flipping. So by finding all keys only used
+once, and tracking to the corresponding pieces, I could find pieces
+that had two edge keys only used once - these would by definition be
+the corner pieces.
+
+* Problem 2
