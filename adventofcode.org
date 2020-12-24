@@ -1062,14 +1062,9 @@ map{
   @k=map{[split","]}(grep{$t{$_}}keys(%t));
   map{
     @p=@{$_};
-    map{
-     ($x,$y)=@p;
-     &{$_};
-     $c{"$x,$y"}++
-    }(values(%f))
+    map{($x,$y)=@p;&{$_};$c{"$x,$y"}++}(values(%f))
   }@k;
   %t=map{($_,1)}(grep{$c{$_}==2||($c{$_}==1&&$t{$_})}keys(%c));
 }1..100;
-print 0+grep{$_}(values(%t))
-'
+print 0+grep{$_}(values(%t))'
 #+END_SRC
