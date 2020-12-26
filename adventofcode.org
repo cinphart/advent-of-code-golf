@@ -955,8 +955,9 @@ print $c'
 
 ** Problem 2
 
-#+BEGIN_SRC bash  :cmdline <day21_full.input :results value silent
-perl -e 'while(<>){
+#+BEGIN_SRC bash  :cmdline <day21_full.input :results output verbatim
+perl -e 'use Data::Dumper;$Data::Dumper::Terse=1;
+while(<>){
   chomp;
   ($_,@a)=grep{length}(split/\(contains|\)|,/);
   map{$a{$_}->{$.}=1}@a;
@@ -964,13 +965,29 @@ perl -e 'while(<>){
   map{$i{$_}->{$.}=1}@i;
   for$i(@i){map{$p{$i}->{$_}=1}@a};
 }
-map{$c+=%{$i{$_}}}(grep{$i=$_;
- !grep{
-   !grep{!$i{$i}->{$_}}keys(%{$a{$_}});
- }(keys(%{$p{$i}}))
-}(keys(%p)));
-print $c'
+for$i(keys(%p)){
+ for$a(keys(%{$p{$i}})){
+  if(grep{!$i{$i}->{$_}}keys(%{$a{$a}})){delete $p{$i}->{$a} };
+ }
+}
+@u=grep{keys(%{$p{$_}})}keys(%p);
+while(@u){
+  for$i(@u){
+    if (keys(%{$p{$i}})==1){
+      $a=(keys(%{$p{$i}}))[0];
+      $r{$a}=$i;
+      delete $p{$i};
+      map{delete$p{$_}->{$a}if$p{$_}}keys(%p);
+    }
+  }
+  @u=grep{keys(%{$p{$_}})}keys(%p);
+}
+print join(",",map{$r{$_}}sort(keys(%r)))'
 #+END_SRC
+
+#+RESULTS:
+: prxmdlz,ncjv,knprxg,lxjtns,vzzz,clg,cxfz,qdfpq
+
 
 * Day 22
 
@@ -1068,3 +1085,18 @@ map{
 }1..100;
 print 0+grep{$_}(values(%t))'
 #+END_SRC
+
+* Day 25
+
+** Problem 1
+
+#+BEGIN_SRC bash :results value silent
+perl -e '
+$c=8184785;$d=5293040;
+$b=1;while($b!=$c){$cl++;$b*=7;$b%=20201227};
+$b=1;while($b!=$d){$dl++;$b*=7;$b%=20201227};
+$b=1;map{$b*=$c;$b%=20201227}1..$dl;
+print"key: $b\n"'
+#+END_SRC 
+
+** Problem 2
